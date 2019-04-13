@@ -7,9 +7,12 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: base-goss-centos
+  - name: base-goss-centos7
     image: centos:7
-    privileged: True
+    privileged: true
+  - name: base-goss-centos6
+    image: centos:6
+    privileged: true
   - name: base-goss-ubuntu
     image: ubuntu
     privileged: True

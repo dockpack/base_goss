@@ -36,6 +36,13 @@
   tags:
     - base_goss
 
+- name: "copy test_goss.yml to remote"
+  template:
+    src: goss.yaml
+    dest: "/root/test_goss.yml"
+  tags:
+    - base_goss
+
 - name: "verify if /root/goss.yaml exists"
   stat:
     path: /root/goss.yaml
@@ -43,33 +50,17 @@
   tags:
     - base_goss
 
-- name: "copy goss.yaml to remote"
-  template:
-    src: goss.yaml
-    dest: /root/goss.yaml
-  when: not yamlfile.stat.exists
-  tags:
-    - base_goss
-
-- name: "copy test_goss.yml to remote"
-  template:
-    src: goss.yaml
-    dest: /root/test_goss.yml
-  tags:
-    - base_goss
-
-- name: Register test files
-  shell: "ls {{ goss_test_directory }}/test_*.yml"
-  register: test_files
-  changed_when: false
+- name: "render goss.yaml on remote"
+  script: goss_render.sh
+  changed_when: no  # Tricking molecule. We render always.
   tags:
     - base_goss
     - validate
 
+
 - name: Execute Goss tests
-  command: "{{ goss_dst }} -g {{ item }} validate --format {{ goss_format }}"
+  command: "{{ goss_dst }} -g /root/goss.yaml validate --format {{ goss_format }}"
   register: test_results
-  with_items: "{{ test_files.stdout_lines }}"
   changed_when: false
   tags:
     - base_goss
@@ -77,8 +68,7 @@
 
 - name: Display details about the Goss results
   debug:
-    msg: "{{ item.stdout_lines }}"
-  with_items: "{{ test_results.results }}"
+    msg: "{{ test_results.stdout_lines }}"
   tags:
     - base_goss
     - validate
@@ -86,8 +76,7 @@
 - name: Fail when tests fail
   fail:
     msg: "Goss failed to validate"
-  when: item.rc != 0
-  with_items: "{{ test_results.results }}"
+  when: test_results.rc != 0
   tags:
     - base_goss
     - validate
