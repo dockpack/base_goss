@@ -52,7 +52,7 @@
 
 - name: "render goss.yaml on remote"
   script: goss_render.sh
-  changed_when: no  # Tricking molecule. We render always.
+  when: not yamlfile.stat.exists
   tags:
     - base_goss
     - validate
