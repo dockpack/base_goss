@@ -13,13 +13,15 @@
 - name: "get goss binary"
   become: no
   delegate_to: localhost
-  retries: 5
-  delay: 5
   get_url:
     url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version }}/goss-linux-amd64"
     validate_certs: no  # for the proxy chain
     dest: "/tmp/goss"
     mode: 0755
+  register: network_access
+  until: network_access is success
+  retries: 10
+  delay: 2
   tags:
     - base_goss
 
