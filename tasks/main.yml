@@ -15,6 +15,7 @@
   delegate_to: localhost
   get_url:
     url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version }}/goss-linux-amd64"
+    sha256sum: "{{ goss[goss_version].sha256sum }}"
     validate_certs: no  # for the proxy chain
     dest: "/tmp/goss"
     mode: 0755

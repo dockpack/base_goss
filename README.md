@@ -17,7 +17,15 @@ Linux machine.
 Role Variables
 --------------
 
-goss_version: Defaults to v0.3.6, which is latest at the time of writing. Any new versions need to be handjammed into vars/main.yml because of the manual checksum validation. Currently supports all known versions
+    goss_version: "v0.3.7"
+    goss_path: "/usr/bin/"
+    goss_arch: amd64
+    goss_dst: /usr/bin/goss
+    goss_url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version }}/goss-linux-{{ goss_arch }}"
+    goss_test_directory: /root
+    goss_format: tap
+
+Any new versions of `goss_version` need to be handjammed into `vars/main.yml` because of the manual checksum validation. Currently all known versions are supported.
 
 Dependencies
 ------------

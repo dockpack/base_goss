@@ -11,3 +11,4 @@ file:
     owner: root
     group: root
     mode: "0755"
+    sha256: "{{ goss[goss_version].sha256sum }}"
