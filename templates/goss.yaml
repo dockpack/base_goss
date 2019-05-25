@@ -6,7 +6,7 @@ file:
     owner: root
     group: root
     filetype: file
-  "{{ goss_path}}goss":
+  "{{ goss_path }}goss":
     exists: true
     owner: root
     group: root
