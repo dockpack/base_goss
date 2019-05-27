@@ -16,6 +16,12 @@ platforms:
   - name: base-goss-ubuntu
     image: ubuntu
     privileged: True
+  - name: base-goss-debian9
+    image: debian:stretch
+    privileged: True
+  - name: base-goss-debian10
+    image: debian:buster
+    privileged: True
 provisioner:
   name: ansible
   config_options:
