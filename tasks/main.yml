@@ -86,6 +86,7 @@
   template:
     src: test_goss.yaml.j2
     dest: "{{ goss_test_directory }}/test_goss.yaml"
+    mode: 0644
   tags:
     - base_goss
 
@@ -93,6 +94,7 @@
   template:
     src: goss.yaml.j2
     dest: "/root/goss.yaml"
+    mode: 0644
   tags:
     - base_goss
     - validate
