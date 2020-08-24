@@ -13,8 +13,8 @@ platforms:
   - name: base-goss-centos6
     image: centos:6
     privileged: true
-  - name: base-goss-ubuntu
-    image: ubuntu
+  - name: base-goss-bionic
+    image: ubuntu:bionic
     privileged: True
   - name: base-goss-debian9
     image: debian:stretch
