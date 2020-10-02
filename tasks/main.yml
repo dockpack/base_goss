@@ -15,6 +15,10 @@
   yum:
     name: epel-release
     state: present
+  register: epel_install
+  until: epel_install is success
+  retries: 3
+  delay: 3
 
 - name: Install jmespath
   package:
