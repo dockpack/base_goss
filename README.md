@@ -26,6 +26,7 @@ Role Variables
     goss_test_directory_mode: 0700
     goss_user: root
     goss_install_dgoss: true
+    goss_download: localhost  # also supports 'direct'
 
 Any new versions of `goss_version` need to be handjammed into `vars/main.yml` because of the manual checksum validation. Currently all known versions are supported.
 

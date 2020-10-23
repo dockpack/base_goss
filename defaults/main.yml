@@ -10,3 +10,4 @@ goss_test_directory_mode: 0700
 goss_format: tap
 goss_user: root
 goss_install_dgoss: true
+goss_download: localhost
