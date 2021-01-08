@@ -10,9 +10,6 @@ platforms:
   - name: base-goss-centos7
     image: centos:7
     privileged: true
-  - name: base-goss-centos6
-    image: centos:6
-    privileged: true
   - name: base-goss-bionic
     image: ubuntu:bionic
     privileged: True
