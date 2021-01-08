@@ -1,6 +1,6 @@
 {
   "name": "dockpack.base_goss",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "scripts": {
     "release": "release-it"
   },
