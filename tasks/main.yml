@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 - name: Install ca-certificates
   apt:
     name: ca-certificates
@@ -11,7 +12,7 @@
     - base_goss
 
 - name: Install EPEL
-  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '6'
+  when: ansible_os_family == 'RedHat'
   yum:
     name: epel-release
     state: present
@@ -21,8 +22,11 @@
   delay: 3
 
 - name: Install jmespath
+#  when: ansible_os_family == 'RedHat'
   package:
-    name: python-jmespath
+    name: python3-jmespath
+    state: present
+    update_cache: true
   register: network_access
   until: network_access is success
   retries: 3
@@ -32,12 +36,12 @@
 
 - block:
     - name: "get goss binary"
-      become: no
+      become: false
       delegate_to: localhost
       get_url:
         url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version }}/goss-linux-amd64"
         sha256sum: "{{ goss[goss_version].sha256sum }}"
-        validate_certs: no  # for the proxy chain
+        validate_certs: false
         dest: "/tmp/goss"
         mode: 0755
       register: network_access
@@ -48,7 +52,7 @@
         - base_goss
 
     - name: Ensure we have local copy of goss
-      become: no
+      become: false
       delegate_to: localhost
       stat:
         path: /tmp/goss
@@ -72,7 +76,7 @@
   get_url:
     url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version }}/goss-linux-amd64"
     sha256sum: "{{ goss[goss_version].sha256sum }}"
-    validate_certs: no  # for the proxy chain
+    validate_certs: false
     dest: "{{ goss_path }}/goss"
     owner: "{{ goss_user }}"
     group: "{{ goss_user }}"
@@ -90,7 +94,7 @@
     src: "dgoss"
     dest: "{{ goss_path }}/dgoss"
     mode: 0755
-  no_log: yes
+  no_log: true
   when: goss_install_dgoss|bool
   tags:
     - base_goss
