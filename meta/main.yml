@@ -1,4 +1,5 @@
 ---
+# Standards: 0.2
 galaxy_info:
   role_name: base_goss
   namespace: dockpack
@@ -26,3 +27,4 @@ galaxy_info:
   galaxy_tags: []
 
 dependencies: []
+...
