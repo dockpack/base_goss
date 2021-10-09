@@ -1,6 +1,8 @@
 ---
 galaxy_info:
-  author: Sean Abbott
+  role_name: base_goss
+  namespace: dockpack
+  author: Sean Abbott & Bas Meijer
   description: Install goss binary and ensure checksum
 
   license: GPLv2
@@ -19,6 +21,7 @@ galaxy_info:
       versions:
         - 6
         - 7
+        - 8
 
   galaxy_tags: []
 
