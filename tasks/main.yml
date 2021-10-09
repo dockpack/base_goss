@@ -1,4 +1,6 @@
 ---
+# tasks for base_goss
+# Standards: 0.2
 # yamllint disable rule:line-length
 - name: Install ca-certificates
   apt:
@@ -35,7 +37,7 @@
     - base_goss
 
 - block:
-    - name: "get goss binary"
+    - name: Get goss binary
       become: false
       delegate_to: localhost
       get_url:
@@ -60,7 +62,7 @@
       tags:
         - base_goss
 
-    - name: "copy goss to remote"
+    - name: Copy goss to remote
       copy:
         src: "/tmp/goss"
         dest: "{{ goss_path }}/goss"
@@ -72,7 +74,7 @@
         - base_goss
   when: goss_download == 'localhost'
 
-- name: "get goss binary directly"
+- name: Get goss binary directly
   get_url:
     url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version }}/goss-linux-amd64"
     sha256sum: "{{ goss[goss_version].sha256sum }}"
@@ -89,7 +91,7 @@
   tags:
     - base_goss
 
-- name: "copy dgoss to remote"
+- name: Copy dgoss to remote
   copy:
     src: "dgoss"
     dest: "{{ goss_path }}/dgoss"
@@ -99,7 +101,7 @@
   tags:
     - base_goss
 
-- name: "ensure {{ goss_test_directory }} exists"
+- name: "Ensure {{ goss_test_directory }} exists"
   file:
     path: "{{ goss_test_directory }}"
     state: directory
@@ -109,7 +111,7 @@
   tags:
     - base_goss
 
-- name: "copy test_goss.yaml to remote"
+- name: Copy test_goss.yaml to remote
   template:
     src: test_goss.yaml.j2
     dest: "{{ goss_test_directory }}/test_goss.yaml"
@@ -117,7 +119,7 @@
   tags:
     - base_goss
 
-- name: "copy goss.yaml to remote"
+- name: Copy goss.yaml to remote
   template:
     src: goss.yaml.j2
     dest: "/root/goss.yaml"
@@ -155,3 +157,4 @@
   tags:
     - base_goss
     - validate
+...
