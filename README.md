@@ -17,7 +17,7 @@ Linux machine. The machine running ansible must have `python-jmespath` installed
 Role Variables
 --------------
 
-    goss_version: "v0.3.10"
+    goss_version: "v0.3.16"
     goss_path: "/usr/bin/"
     goss_arch: amd64
     goss_dst: /usr/bin/goss
