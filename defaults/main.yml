@@ -1,7 +1,7 @@
 ---
 # defaults file for install_goss
 # Standards: 0.2
-goss_version: "v0.3.16"
+goss_version: "v0.3.18"
 goss_path: "/usr/bin/"
 goss_arch: amd64
 goss_dst: /usr/bin/goss
