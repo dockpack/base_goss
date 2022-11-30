@@ -1,12 +1,16 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# FROM: https://github.com/indusbox/goss-ansible
+''' goss '''
 import os
-from ansible.module_utils.basic import *
+
+from ansible.module_utils.basic import AnsibleModule
+
 
 DOCUMENTATION = '''
 ---
 module: goss
 author: Mathieu Corbin
-short_description: See https://github.com/indusbox/goss-ansible
+short_description: Launch goss (https://github.com/aelsabbahy/goss) tests
 description:
   - Launch goss tests.
     This module always returns `changed = false` for idempotence.
@@ -21,6 +25,10 @@ options:
     description:
       - Path location for the goss executable.
         Default is "goss" (ie.`no absolute path,  goss executable must be available in $PATH).
+  vars_path:
+    required: false
+    description:
+      - Path location for a variables YAML/JSON file to use as templating inputs.
   format:
     required: false
     description:
@@ -31,22 +39,21 @@ options:
     required: false
     description:
       - Save the result of the goss command in a file whose path is output_file
-
 examples:
   - name: run goss against the gossfile /path/to/file.yml
     goss:
       path: "/path/to/file.yml"
-
   - name: run goss against the gossfile /path/to/file.yml with nagios output
     goss:
       path: "/path/to/file.yml"
       format: "nagios"
-
   - name: run /usr/local/bin/goss against the gossfile /path/to/file.yml
     goss:
       path: "/path/to/file.yml"
       goss_path: "/usr/local/bin/goss"
-
+  - name: run /usr/local/bin/goss with a variables file
+    goss:
+      vars_path: "/path/to/file.yml"
   - name: run goss against multiple gossfiles and write the result in JSON format to /my/output/ for each file
     goss:
       path: "{{ item }}"
@@ -56,82 +63,90 @@ examples:
 '''
 
 
-# launch goss validate command on the file
-def check(module, test_file_path, output_format, goss_path):
-    cmd = ""
+def check(module, test_file_path, output_format, goss_path, vars_path):
+    """
+    Launch goss validate command on the file
+    """
+    cmd = f'{ goss_path } --gossfile { test_file_path }'
+    # goss parent command flags
+    if vars_path is not None:
+        cmd += f' --vars { vars_path }'
+
+    # validate sub-command flags
+    cmd += ' validate'
     if output_format is not None:
-        cmd = "{0} -g {1} v --format {2}".format(goss_path, test_file_path, output_format)
-    else:
-        cmd = "{0} -g {1} v".format(goss_path, test_file_path)
+        cmd += f' --format { output_format }'
+
     return module.run_command(cmd)
 
 
-# write goss result to output_file_path
-def output_file(output_file_path, out):
+def write_result(output_file_path, out):
+    """
+    Write goss result to output_file_path
+    """
     if output_file_path is not None:
-        with open(output_file_path, 'w') as output_file:
+        with open(output_file_path, 'w', encoding="utf8") as output_file:
             output_file.write(out)
 
 
-def main():
+def run_module():
+    """
+    Run module
+    """
     module = AnsibleModule(
         argument_spec=dict(
             path=dict(required=True, type='str'),
             format=dict(required=False, type='str'),
             output_file=dict(required=False, type='str'),
+            vars_path=dict(required=False, type='str'),
             goss_path=dict(required=False, default='goss', type='str'),
         ),
         supports_check_mode=False
     )
 
-    test_file_path = module.params['path']  # test file path
+    test_file_path = module.params['path']
     output_format = module.params['format']  # goss output format
     output_file_path = module.params['output_file']
     goss_path = module.params['goss_path']
-
-    if test_file_path is None:
-        module.fail_json(msg="test file path is null")
+    vars_path = module.params['vars_path']
 
     test_file_path = os.path.expanduser(test_file_path)
 
-    # test if access to test file is ok
-
     if not os.access(test_file_path, os.R_OK):
-        module.fail_json(msg="Test file %s not readable" % (test_file_path))
+        module.fail_json(msg=f'Test file { test_file_path } not readable')
 
-    # test if test file is not a dir
     if os.path.isdir(test_file_path):
-        module.fail_json(msg="Test file must be a file ! : %s" % (test_file_path))
+        module.fail_json(
+            msg=f'Test file { test_file_path } must be a file but is a path')
 
-    (rc, out, err) = check(module, test_file_path, output_format, goss_path)
+    return_code, out, err = check(module, test_file_path,
+                                  output_format, goss_path, vars_path)
+
+    if return_code is not None and return_code != 0:
+        error_msg = f'err : { err } ; out : { out }'
+        module.fail_json(msg=error_msg)
 
     if output_file_path is not None:
         output_file_path = os.path.expanduser(output_file_path)
-        # check if output_file is a file
+
         if output_file_path.endswith(os.sep):
-            module.fail_json(msg="output_file must be a file. Actually :  %s "
-                             % (output_file_path))
+            module.fail_json(
+                msg=f'output_file { output_file_path } must be a file')
 
         output_dirname = os.path.dirname(output_file_path)
 
-        # check if output directory exists
         if not os.path.exists(output_dirname):
-            module.fail_json(msg="directory %s does not exists" % (output_dirname))
+            module.fail_json(
+                msg=f'directory { output_dirname } does not exists')
 
-        # check if writable
         if not os.access(os.path.dirname(output_file_path), os.W_OK):
-            module.fail_json(msg="Destination %s not writable" % (os.path.dirname(output_file_path)))
-        # write goss result on the output file
-        output_file(output_file_path, out)
+            module.fail_json(
+                msg=f'Destination { output_dirname } not writable')
 
-    if rc is not None and rc != 0:
-        error_msg = "err : {0} ; out : {1}".format(err, out)
-        module.fail_json(msg=error_msg)
+        write_result(output_file_path, out)
 
-    result = {}
-    result['stdout'] = out
-    result['changed'] = False
+    module.exit_json(stdout=out, changed=False)
 
-    module.exit_json(**result)
 
-main()
+if __name__ == '__main__':
+    run_module()

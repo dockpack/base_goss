@@ -1,4 +1,10 @@
 ---
-- hosts: all
-  roles:
-    - role: base_goss
+- name: Converge
+  hosts: all
+  vars:
+    role_name: "{{ lookup('env','MOLECULE_PROJECT_DIRECTORY') | basename }}"
+    verify_state: true
+  tasks:
+    - name: "Include {{ role_name }}"
+      ansible.builtin.include_role:
+        name: "{{ role_name }}"

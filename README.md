@@ -1,4 +1,4 @@
-[![Galaxy](https://img.shields.io/badge/galaxy-dockpack.base__goss-blue.svg?style=flat)](https://galaxy.ansible.com/dockpack/base_goss)[![Build Status](https://api.travis-ci.org/dockpack/base_goss.svg)](https://travis-ci.org/dockpack/base_goss)
+[![Galaxy](https://img.shields.io/badge/galaxy-dockpack.base__goss-blue.svg?style=flat)](https://galaxy.ansible.com/dockpack/base_goss)
 
 base_goss
 ---------
@@ -21,9 +21,9 @@ Role Variables
     goss_path: "/usr/bin/"
     goss_arch: amd64
     goss_dst: /usr/bin/goss
-    goss_url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version }}/goss-linux-{{ goss_arch }}"
-    goss_test_directory: /root
-    goss_test_directory_mode: 0700
+    goss_url: "https://github.com/goss-org/goss/releases/download/{{ goss_version }}/goss-linux-{{ goss_arch }}"
+    goss_test_directory: /etc/goss.d
+    goss_test_directory_mode: 0755
     goss_user: root
     goss_install_dgoss: true
     goss_download: localhost  # also supports 'direct'
