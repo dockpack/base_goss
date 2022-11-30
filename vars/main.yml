@@ -2,6 +2,8 @@
 # vars file for install_goss
 # Standards: 0.2
 goss:
+  v0.3.20:
+    sha256sum: 459bc14662967d07795234374a04d611cd2f821140eb4225e7d9ba4572630e11
   v0.3.18:
     sha256sum: 432308ebca0caf8165d45bd27e3262126aad9d15572ac8cb3149b3c91f75aace
   v0.3.16:

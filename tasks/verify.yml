@@ -1,0 +1,50 @@
+---
+
+- name: Ensure we have remote copy of goss
+  stat:
+    path: "{{ goss_dst }}"
+  register: goss_bin_remote
+  tags:
+    - base_goss
+    - validate
+
+- name: Tests
+  block:
+    - name: Execute Goss tests
+      command: "{{ goss_dst }} validate -f json"
+      args:
+        chdir: "{{ goss_test_directory }}"
+      register: test_results
+      changed_when: false
+      failed_when: false
+      check_mode: false
+
+    - name: Show failing Goss tests
+      debug:
+        msg: "Goss test failed"
+      loop: "{{ test_results.stdout | from_json | json_query(query) }}"
+      vars:
+        query: 'results[?successful==`false`]."summary-line"'
+      when: test_results.rc != 0
+      failed_when: test_results.rc != 0
+
+  when: goss_bin_remote.stat.exists
+  tags:
+    - base_goss
+    - validate
+
+- name: Register test files
+  shell: "ls {{ goss_test_directory }}/test_*.yaml"
+  changed_when: false
+  register: test_files
+
+- name: Execute Goss tests
+  command: "{{ goss_dst }} -g {{ item }} validate -f {{ goss_format }}"
+  changed_when: false
+  register: test_results
+  with_items: "{{ test_files.stdout_lines }}"
+
+- name: Display details about the Goss results
+  debug:
+    msg: "{{ item.stdout_lines }}"
+  with_items: "{{ test_results.results }}"
