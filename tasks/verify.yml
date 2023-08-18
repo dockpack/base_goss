@@ -33,18 +33,11 @@
     - base_goss
     - validate
 
-- name: Register test files
-  shell: "ls {{ goss_test_directory }}/test_*.yaml"
-  changed_when: false
-  register: test_files
-
 - name: Execute Goss tests
-  command: "{{ goss_dst }} -g {{ item }} validate -f {{ goss_format }}"
+  command: "{{ goss_dst }} -g {{ goss_test_directory }}/goss.yaml validate -f {{ goss_format }}"
   changed_when: false
   register: test_results
-  with_items: "{{ test_files.stdout_lines }}"
 
 - name: Display details about the Goss results
   debug:
-    msg: "{{ item.stdout_lines }}"
-  with_items: "{{ test_results.results }}"
+    msg: "{{  test_results.stdout_lines  }}"
