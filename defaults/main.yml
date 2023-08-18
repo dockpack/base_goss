@@ -3,6 +3,7 @@
 # Standards: 0.2
 desired_state: present
 verify_state: false
+goss_report: false
 goss_version: "v0.3.20"
 goss_path: "/usr/bin"
 goss_arch: amd64

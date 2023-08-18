@@ -38,6 +38,7 @@
   changed_when: false
   register: test_results
 
-- name: Display details about the Goss results
+- name: Report about the Goss results
   debug:
     msg: "{{  test_results.stdout_lines  }}"
+  when: goss_report | bool
