@@ -45,7 +45,7 @@
 - name: Get goss binary directly
   get_url:
     url: "{{ goss_url }}"
-    sha256sum: "{{ goss[goss_version].sha256sum }}"
+    checksum: "sha256:{{ goss[goss_version].sha256sum }}"
     validate_certs: false
     dest: "{{ goss_path }}/goss"
     owner: "{{ goss_user }}"
