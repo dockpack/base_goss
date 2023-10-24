@@ -42,10 +42,9 @@
       tags:
         - base_goss
 
-
 - name: Get goss binary directly
-  get_url:
-    ansible.builtin.get_url: "{{ goss_url }}"
+  ansible.builtin.get_url:
+    url: "{{ goss_url }}"
     checksum: "sha256:{{ goss[goss_version].sha256sum }}"
     validate_certs: false
     dest: "{{ goss_path }}/goss"
@@ -96,6 +95,5 @@
   tags:
     - base_goss
     - validate
-
 
 ...
