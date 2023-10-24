@@ -1,7 +1,7 @@
 ---
 
 - name: Install ca-certificates
-  apt:
+  ansible.builtin.apt:
     name: ca-certificates
   register: network_access
   until: network_access is success
@@ -13,7 +13,7 @@
 
 - name: Install EPEL
   when: ansible_os_family == 'RedHat'
-  yum:
+  ansible.builtin.yum:
     name: epel-release
     state: present
   register: epel_install
@@ -23,7 +23,7 @@
 
 - name: Install jmespath
   # when: ansible_os_family == 'RedHat'
-  package:
+  ansible.builtin.package:
     name: python3-jmespath
     state: present
     update_cache: true

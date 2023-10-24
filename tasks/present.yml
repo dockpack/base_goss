@@ -9,7 +9,7 @@
     - name: Get goss binary
       become: false
       delegate_to: localhost
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ goss_url }}"
         checksum: "sha256:{{ goss[goss_version].sha256sum }}"
         validate_certs: false
@@ -25,14 +25,14 @@
     - name: Ensure we have local copy of goss
       become: false
       delegate_to: localhost
-      stat:
+      ansible.builtin.stat:
         path: /tmp/goss
       register: goss_bin
       tags:
         - base_goss
 
     - name: Copy goss to remote
-      copy:
+      ansible.builtin.copy:
         src: "/tmp/goss"
         dest: "{{ goss_path }}/goss"
         owner: "{{ goss_user }}"
@@ -44,7 +44,7 @@
 
 
 - name: Get goss binary directly
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ goss_url }}"
     checksum: "sha256:{{ goss[goss_version].sha256sum }}"
     validate_certs: false
@@ -61,7 +61,7 @@
     - base_goss
 
 - name: Copy dgoss to remote
-  copy:
+  ansible.builtin.copy:
     src: "dgoss"
     dest: "{{ goss_path }}/dgoss"
     mode: 0755
@@ -71,7 +71,7 @@
     - base_goss
 
 - name: "Ensure presence of directory {{ goss_test_directory }}"
-  file:
+  ansible.builtin.file:
     path: "{{ goss_test_directory }}"
     state: directory
     owner: "{{ goss_user }}"
@@ -81,7 +81,7 @@
     - base_goss
 
 - name: Copy test_goss.yaml to remote
-  template:
+  ansible.builtin.template:
     src: test_goss.yaml.j2
     dest: "{{ goss_test_directory }}/test_goss.yaml"
     mode: 0644
@@ -89,7 +89,7 @@
     - base_goss
 
 - name: Copy goss.yaml to remote
-  template:
+  ansible.builtin.template:
     src: goss.yaml.j2
     dest: "{{ goss_test_directory }}/goss.yaml"
     mode: 0644
