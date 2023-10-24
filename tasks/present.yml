@@ -4,6 +4,7 @@
 # yamllint disable rule:line-length
 
 - name: Local download
+  when: goss_download == 'localhost'
   block:
     - name: Get goss binary
       become: false
@@ -40,7 +41,7 @@
       when: goss_bin.stat.exists
       tags:
         - base_goss
-  when: goss_download == 'localhost'
+
 
 - name: Get goss binary directly
   get_url:
@@ -69,7 +70,7 @@
   tags:
     - base_goss
 
-- name: "Ensure {{ goss_test_directory }} exists"
+- name: "Ensure presence of directory {{ goss_test_directory }}"
   file:
     path: "{{ goss_test_directory }}"
     state: directory
