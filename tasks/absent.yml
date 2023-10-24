@@ -1,16 +1,16 @@
 ---
 
 - name: "Remove {{ goss_test_directory }}"
-  file:
+  ansible.builtin.file:
     path: "{{ goss_test_directory }}"
     state: absent
 
 - name: Remove goss
-  file:
+  ansible.builtin.file:
     path: "{{ goss_path }}/goss"
     state: absent
 
 - name: Remove dgoss
-  file:
+  ansible.builtin.file:
     path: "{{ goss_path }}/dgoss"
     state: absent

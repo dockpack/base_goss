@@ -1,7 +1,7 @@
 ---
 
 - name: Ensure we have remote copy of goss
-  stat:
+  ansible.builtin.stat:
     path: "{{ goss_dst }}"
   register: goss_bin_remote
   tags:
@@ -15,7 +15,7 @@
     - validate
   block:
     - name: Execute Goss tests
-      command: "{{ goss_dst }} validate -f json"
+      ansible.builtin.command: "{{ goss_dst }} validate -f json"
       args:
         chdir: "{{ goss_test_directory }}"
       register: test_results
@@ -24,7 +24,7 @@
       check_mode: false
 
     - name: Show failing Goss tests
-      debug:
+      ansible.builtin.debug:
         msg: "Goss test failed"
       loop: "{{ test_results.stdout | from_json | json_query(query) }}"
       vars:
@@ -33,11 +33,11 @@
       failed_when: test_results.rc != 0
 
 - name: Execute Goss tests
-  command: "{{ goss_dst }} -g {{ goss_test_directory }}/goss.yaml validate -f {{ goss_format }}"
+  ansible.builtin.command: "{{ goss_dst }} -g {{ goss_test_directory }}/goss.yaml validate -f {{ goss_format }}"
   changed_when: false
   register: test_results
 
 - name: Report about the Goss results
-  debug:
+  ansible.builtin.debug:
     msg: "{{ test_results.stdout_lines }}"
   when: goss_report | bool
