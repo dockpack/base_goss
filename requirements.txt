@@ -1,4 +1,4 @@
-ansible==7.0.0
+ansible==8.5.0
 ansible-lint==6.21.1
 anyconfig>=0.10.0 # not directly required, pinned by Snyk to avoid a vulnerability
 attrs>=19.2.0
