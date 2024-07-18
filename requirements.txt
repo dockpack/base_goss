@@ -10,7 +10,7 @@ molecule-vagrant==1.0.0
 pre-commit
 pylint
 rich==12.5.1
-setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
+setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
 tox
 yamllint==1.28.0
 paramiko>=3.4.0 # not directly required, pinned by Snyk to avoid a vulnerability
